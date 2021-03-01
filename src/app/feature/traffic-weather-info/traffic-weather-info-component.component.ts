@@ -39,7 +39,9 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
     this.getTrafficImg();
     this.getWeatherForecast('', '');
   }
-
+  /**
+   * To get the traffic images as per the date and time
+   */
   getTrafficImg(dateTime?: string): void {
     const param = !dateTime ? `?date_time=${this.utilService.curreTimeStamp()}` : `?date_time=${this.utilService.curreTimeStamp(dateTime)}`;
     console.log('Request body is,');
@@ -47,42 +49,63 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
       .subscribe((res) => {
         this.trafficData = res;
         console.log(res);
+      }, (error: any) => {
+        console.log('There was an error while loading the traffic details from thee server', error);
+        this.utilService.clearServerError();
       });
   }
-
+  /**
+   * @description To get weather forecast
+   * @param location 
+   * @param dateTime 
+   */
   getWeatherForecast(location: string, dateTime: string): void {
     const param = `?area_metadata=${location}&date_time=${dateTime}`;
     this.baseService.sendRequest<GetWeatherForecastRequest, GetWeatherForecastResponse>(RestEndPoint.GetWeatherForecast, RequestType.Get)
       .subscribe((res) => {
         console.log('The location response is', res);
         this.locationData = res;
+      }, (error: any) => {
+        console.log('There was an error while loading the weather forecast details from the server', error);
+        this.utilService.clearServerError();
       });
   }
-
-  handleTimeChange(event: any): void {
+  /**
+   * @description Handler for user action to time change
+   * @param event 
+   */
+  handleTimeChange(): void {
     if (this.dateSelected && this.timeSelected) {
       if (this.dateSelected - this.today === 0 && this.compareTime(this.timeSelected)) {
-         this.timeSelected = this.utilService.curreTimeStamp().split('T')[1].substr(0, 5);
+        this.timeSelected = this.utilService.curreTimeStamp().split('T')[1].substr(0, 5);
       }
       this.timeChangeEmitter.next(this.timeSelected);
     }
   }
-
-  handleDateChange(event: any): void {
+  /**
+   * @description Handler for user action to date change
+   * @param event
+   */
+  handleDateChange(): void {
     if (this.dateSelected && this.timeSelected) {
       this.dateChangeEmitter.next(this.dateSelected);
     }
   }
-  
-  compareTime(time1: string): boolean {
-   if (+time1.split(':')[0] > (new Date().getHours())) {
-     return true;
-   } else if (+time1.split(':')[1] > (new Date().getMinutes())) {
-     return true;
-   }
-   return false;
- }
-
+  /**
+   * @description To compare two timings
+   * @param time1 
+   */
+  compareTime(time: string): boolean {
+    if (+time.split(':')[0] > (new Date().getHours())) {
+      return true;
+    } else if (+time.split(':')[1] > (new Date().getMinutes())) {
+      return true;
+    }
+    return false;
+  }
+  /**
+   * Handler for user action to location change
+   */
   handleLocationChange(event: any): boolean {
     this.trafficData.items[0].cameras.filter((data: any) => {
       if (data.location.longitude === event.value.longitude && data.location.latitude === event.value.latitude) {

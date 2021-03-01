@@ -2,9 +2,22 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.2.
 
+## Prerequisite
+Your machine should have node 12 or higher version.
+Download the code from the repo and then run `npm install` inside the project directory.
+Once the installation of the packages are done, run `npm install -g @angular/cli`.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+## Typescript lint
+
+Run `ng lint` to check the lint errors on typescript
+
+## Scss lint
+
+Run `npm run sass-lint` to check the lint errors on scss styles
 
 ## Code scaffolding
 

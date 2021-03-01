@@ -2,12 +2,9 @@ $imgMargin: 3px;
 
 .traffic-info {
   display: flex;
-  align-items: center;
   justify-content: center;
 
   .traffic-body {
-    position: relative;
-    top: 100px;
     width: 90%;
 
     .input-container {
@@ -15,67 +12,66 @@ $imgMargin: 3px;
       justify-content: center;
 
       .input-box {
-        width: 1092px;
+        width: 100%;
 
         .date-time-box {
-          width: 1092px;
+          width: 100%;
 
           .date {
-            width: 540px;
+            width: calc(100% - 6px);
           }
 
           .time {
-            float: right;
-            width: 540px;
+            width: calc(100% - 6px);
           }
         }
 
 
         .location-weather-box {
-          width: 1092px;
+          width: 100%;
 
           .location {
-            width: 540px;
+            width: calc(50% - 6px);
           }
 
           .weather {
             float: right;
-            width: 540px;
+            width: calc(50% - 6px);
           }
         }
       }
 
-      @media screen and (max-width: 1237px) {
+      @media screen and (max-width: 586px) {
         .input-box {
-          width: 546px;
+          width: 100%;
 
           .date-time-box {
-            width: 546px;
 
             .date {
-              width: 270px;
+              display: block;
+              width: 100%;
             }
 
             .time {
-              float: right;
-              width: 270px;
+              display: block;
+              float: none;
+              width: 100%;
+            }
+          }
+
+          .location-weather-box {
+
+            .location {
+              display: block;
+              width: 100%;
+            }
+
+            .weather {
+              float: none !important;
+              width: 100%;
             }
           }
         }
-
-        .location-weather-box {
-          width: 546px;
-
-          .location {
-            display: block
-          }
-
-          .weather {
-            float: none !important;
-            width: 540px;
-          }
-        }
-
       }
     }
 
@@ -87,6 +83,23 @@ $imgMargin: 3px;
 
       .img {
         margin: $imgMargin;
+        height: 450px;
+        width: calc(50% - 6px);
+      }
+    }
+
+    @media screen and (max-width: 850px) {
+      .img-box {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+
+        .img {
+          margin: $imgMargin;
+          height: 280px;
+          width: 100%;
+        }
       }
     }
   }

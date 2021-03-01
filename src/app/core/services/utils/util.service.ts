@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import Environment from '../../models/environment.interface';
@@ -15,18 +15,29 @@ import Environment from '../../models/environment.interface';
  * class to handle all utilities need application wide
  */
 export class UtilService {
-  constructor() { }
+  private isServerError: Subject<boolean>;
 
-
-  /**
-   * to handle the max length of a input field
-   * *@param control
-   * *@param maxLength
-   */
-  handleNumLength(control: FormControl, maxLength: number): boolean {
-    return control.value ? (control.value.toString().length >= maxLength ? false : true) : true;
+  constructor() {
+    this.isServerError = new Subject();
   }
 
+  get serverError(): Subject<boolean> {
+    return this.isServerError;
+  }
+
+  /**
+   * To update server error status
+   */
+  createServerError(): void {
+    this.isServerError.next(true);
+  }
+
+  /**
+   * To clear server error
+   */
+  clearServerError(): void {
+    this.isServerError.next(false);
+  }
   /**
    * to get environment details - prod/ dev
    */
@@ -41,7 +52,7 @@ export class UtilService {
     return window.document.cookie;
   }
   /**
-   * to set cookie value
+   *  @description To set cookie value
    * *@param cookieValue
    */
   set cookie(cookieValue) {
@@ -51,7 +62,7 @@ export class UtilService {
   /**
    * to get local storage instance
    */
-  get localStorage(): any{
+  get localStorage(): any {
     return window.localStorage;
   }
 
@@ -70,15 +81,9 @@ export class UtilService {
   }
 
   /**
-   * method to convert a word/ sentence to title case
-   * *@param str
+   * @description To get current date with timestamp
+   * @param dateParam 
    */
-  toTitleCase = (str: string) => {
-    return str.replace(/(^|\s)\S/g, (t) => {
-      return t.toUpperCase();
-    });
-  }
-
   curreTimeStamp(dateParam?: string): string {
     const dateSelection = dateParam ? new Date(dateParam) : new Date();
     const year = this.convertToTwoDigit(dateSelection.getFullYear());
@@ -89,9 +94,13 @@ export class UtilService {
     const seconds = this.convertToTwoDigit(dateSelection.getSeconds());
     return `${year}-${month}-${date}T${hours}:${mins}:${seconds}`;
   }
-
+  /**
+   * @description To convert a single digit to double digit
+   * @param num
+   */
   convertToTwoDigit(num: number): string | number {
     return num < 10 ? `0${num}` : num;
   }
+
 }
 

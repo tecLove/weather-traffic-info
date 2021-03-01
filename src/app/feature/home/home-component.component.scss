@@ -1,0 +1,16 @@
+.home {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.server-error {
+    color: #f08080;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+
+    @media screen and (max-width: 850px) {
+        font-size: 13px;
+    }
+}

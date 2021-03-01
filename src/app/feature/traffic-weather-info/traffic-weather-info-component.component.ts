@@ -15,12 +15,14 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
   timeSelected: string | undefined;
   dateSelected: any;
   trafficData: any;
+  today: any;
   locationData: any;
   dateChangeEmitter: BehaviorSubject<any>;
   timeChangeEmitter: BehaviorSubject<any>;
   constructor(private baseService: BaseService, private utilService: UtilService) {
     this.dateSelected = new Date();
     this.timeSelected = this.utilService.curreTimeStamp().split('T')[1].substr(0, 5);
+    this.today = new Date();
     this.dateChangeEmitter = new BehaviorSubject(undefined);
     this.timeChangeEmitter = new BehaviorSubject(undefined);
   }
@@ -59,6 +61,9 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
 
   handleTimeChange(event: any): void {
     if (this.dateSelected && this.timeSelected) {
+      if (this.dateSelected - this.today === 0 && this.compareTime(this.timeSelected)) {
+         this.timeSelected = this.utilService.curreTimeStamp().split('T')[1].substr(0, 5);
+      }
       this.timeChangeEmitter.next(this.timeSelected);
     }
   }
@@ -68,6 +73,15 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
       this.dateChangeEmitter.next(this.dateSelected);
     }
   }
+  
+  compareTime(time1: string): boolean {
+   if (+time1.split(':')[0] > (new Date().getHours())) {
+     return true;
+   } else if (+time1.split(':')[1] > (new Date().getMinutes())) {
+     return true;
+   }
+   return false;
+ }
 
   handleLocationChange(event: any): boolean {
     this.trafficData.items[0].cameras.filter((data: any) => {

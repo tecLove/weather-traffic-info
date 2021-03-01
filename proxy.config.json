@@ -1,0 +1,7 @@
+{
+  "/v1": {
+    "target": "https://api.data.gov.sg",
+    "secure": false,
+    "logLevel": "debug"
+  }
+}

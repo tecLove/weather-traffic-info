@@ -1,0 +1,45 @@
+ <div class="traffic-info">
+   <div class="traffic-body">
+     <div class="input-container">
+       <div class="input-box">
+         <div class="date-time-box">
+           <mat-form-field appearance="fill" class="date">
+             <mat-label>Choose a date</mat-label>
+             <input matInput [matDatepicker]="picker" [(ngModel)]="_date" max="_currentDate">
+             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+             <mat-datepicker #picker startView="year" (closed)="handleDateChange($event)" max="_currentDate">
+             </mat-datepicker>
+           </mat-form-field>
+           <mat-form-field appearance="fill" class="time">
+             <mat-label>Choose a time</mat-label>
+             <input matInput [ngxTimepicker]="pickerTime" placeholder="Choose a time" [format]=24 [(ngModel)]="_time">
+             <ngx-material-timepicker #pickerTime (closed)="handleTimeChange($event)"></ngx-material-timepicker>
+           </mat-form-field>
+         </div>
+         <div class="location-weather-box">
+           <mat-form-field appearance="fill" class="location">
+             <mat-label>Location</mat-label>
+             <mat-select [(ngModel)]="_time" name="Selection" (selectionChange)="handleLocationChange($event)">
+               <ng-container *ngIf="locationData">
+                 <ng-container *ngFor="let location of locationData['area_metadata']">
+                   <mat-option [value]="location.label_location">
+                     {{location.name}}
+                   </mat-option>
+                 </ng-container>
+               </ng-container>
+             </mat-select>
+           </mat-form-field>
+           <mat-form-field class="weather">
+             <mat-label>Weather for selected time</mat-label>
+             <textarea matInput placeholder="Ex. It makes me feel..." disabled></textarea>
+           </mat-form-field>
+         </div>
+       </div>
+     </div>
+     <div *ngIf="trafficData" class="img-box">
+       <ng-container *ngFor="let imgSrc of trafficData['items'][0]['cameras']">
+         <img src={{imgSrc?.image}} height="380px" width="540px" class="img">
+       </ng-container>
+     </div>
+   </div>
+ </div>

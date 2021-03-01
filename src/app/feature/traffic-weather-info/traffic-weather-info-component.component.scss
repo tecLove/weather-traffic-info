@@ -1,0 +1,91 @@
+.traffic-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .traffic-body {
+    position: relative;
+    top: 100px;
+    width: 90%;
+
+    .input-container {
+      display: flex;
+      justify-content: center;
+
+      .input-box {
+        width: 1092px;
+
+        .date-time-box {
+          width: 1092px;
+
+          .date {
+            width: 540px;
+          }
+
+          .time {
+            float: right;
+            width: 540px;
+          }
+        }
+
+
+        .location-weather-box {
+          width: 1092px;
+
+          .location {
+            width: 540px;
+          }
+
+          .weather {
+            float: right;
+            width: 540px;
+          }
+        }
+      }
+
+      @media screen and (max-width: 1237px) {
+        .input-box {
+          width: 546px;
+
+          .date-time-box {
+            width: 546px;
+
+            .date {
+              width: 270px;
+            }
+
+            .time {
+              float: right;
+              width: 270px;
+            }
+          }
+        }
+
+        .location-weather-box {
+          width: 546px;
+
+          .location {
+            display: block
+          }
+
+          .weather {
+            float: none !important;
+            width: 540px;
+          }
+        }
+
+      }
+    }
+
+    .img-box {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+
+      .img {
+        margin: 3px;
+      }
+    }
+  }
+}

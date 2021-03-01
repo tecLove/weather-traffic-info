@@ -11,21 +11,21 @@ export class BaseComponent implements OnDestroy, OnInit, AfterViewInit, OnChange
   /**
    * method to be called for onInit in child component
    */
-  init() {
+  init(): void {
     // method can be overridden
   }
 
   /**
    * method to be called for onChange in child component
    */
-  onChange(data) {
+  onChange(data: any): void {
     // method can be overridden
   }
 
   /**
    * method to be called for AfterViewInit in child component
    */
-  viewInit() {
+  viewInit(): void {
     // method can be overridden
   }
 

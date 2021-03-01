@@ -23,7 +23,7 @@ export class UtilService {
    * *@param control
    * *@param maxLength
    */
-  handleNumLength(control: FormControl, maxLength: number) {
+  handleNumLength(control: FormControl, maxLength: number): boolean {
     return control.value ? (control.value.toString().length >= maxLength ? false : true) : true;
   }
 
@@ -37,7 +37,7 @@ export class UtilService {
   /**
    * to get cookie instance
    */
-  get cookie() {
+  get cookie(): string {
     return window.document.cookie;
   }
   /**
@@ -51,21 +51,21 @@ export class UtilService {
   /**
    * to get local storage instance
    */
-  get localStorage() {
+  get localStorage(): any{
     return window.localStorage;
   }
 
   /**
    * to get session storage instance
    */
-  get sessionStorage() {
+  get sessionStorage(): any {
     return window.sessionStorage;
   }
 
   /**
    * to get window location object
    */
-  get windowLocation() {
+  get windowLocation(): any {
     return window.location;
   }
 
@@ -80,15 +80,14 @@ export class UtilService {
   }
 
   curreTimeStamp(dateParam?: string): string {
-    const date = dateParam ? new Date(dateParam) : new Date();
-    const _year = this.convertToTwoDigit(date.getFullYear());
-    const _month = this.convertToTwoDigit(date.getMonth() + 1);
-    const _date =this.convertToTwoDigit(date.getDate()); 
-    const _hours = this.convertToTwoDigit(date.getHours());
-    const _mins = this.convertToTwoDigit(date.getMinutes());
-    const _seconds = this.convertToTwoDigit(date.getSeconds());
-    
-    return `${_year}-${_month}-${_date}T${_hours}:${_mins}:${_seconds}`
+    const dateSelection = dateParam ? new Date(dateParam) : new Date();
+    const year = this.convertToTwoDigit(dateSelection.getFullYear());
+    const month = this.convertToTwoDigit(dateSelection.getMonth() + 1);
+    const date = this.convertToTwoDigit(dateSelection.getDate());
+    const hours = this.convertToTwoDigit(dateSelection.getHours());
+    const mins = this.convertToTwoDigit(dateSelection.getMinutes());
+    const seconds = this.convertToTwoDigit(dateSelection.getSeconds());
+    return `${year}-${month}-${date}T${hours}:${mins}:${seconds}`;
   }
 
   convertToTwoDigit(num: number): string | number {

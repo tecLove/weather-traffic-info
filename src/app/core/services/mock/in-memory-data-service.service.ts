@@ -13,7 +13,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
   constructor() {
   }
-  createDb() {
+  createDb(): any {
     const forms = [
       { id: 1, name:  FormEndPoint.GetTrafficImg, metadata: mockTrafficImg },
       { id: 2, name:  FormEndPoint.GetWeatherForecast, metadata: mockWeatherFrcast },

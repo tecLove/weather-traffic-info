@@ -37,13 +37,15 @@ export class BaseService {
     this.endPoint = endpoint;
     this.setAuthHeader();
     const baseUrl = this.util.environment.production ? '' : this.util.environment.apiBaseUrl;
-    let url = baseUrl + (this.isMock ? this.util.environment.appCntxt + RestEndPoint.MockService + '/?name=' + endpoint.split('/').reverse()[0]
+    let url = baseUrl + (this.isMock ?
+      (this.util.environment.appCntxt + RestEndPoint.MockService + '/?name=' + endpoint.split('/').reverse()[0])
       : this.util.environment.appCntxt + endpoint);
     url = param ? `${url}${param}` : url;
     const REQUEST_TYPES = this.isMock ? RequestType.Get : requestType;
     switch (REQUEST_TYPES) {
       case RequestType.Get:
-        return this.get(url).pipe(retryWhen(this.customRetryStrategy({ includedStatusCodes: [504, 400] })), map(this.handleResponse), catchError(this.handleError));
+        return this.get(url).pipe(retryWhen(this.customRetryStrategy({ includedStatusCodes: [504, 400] })),
+          map(this.handleResponse), catchError(this.handleError));
       case RequestType.Put:
         return this.put(url, body).pipe(map(this.handleResponse), catchError(this.handleError));
     }
@@ -53,7 +55,7 @@ export class BaseService {
    * http get request
    * * * @param url
    */
-  private get(url: string) {
+  private get(url: string): Observable<any> {
     return this.http.get(url, httpOptions);
   }
 
@@ -62,7 +64,7 @@ export class BaseService {
    * * @param url
    * * @param body
    */
-  private put(url: string, body: any) {
+  private put(url: string, body: any): Observable<any> {
     return this.http.put(url, body, httpOptions);
   }
 
@@ -97,7 +99,7 @@ export class BaseService {
   /**
    * method to handle auth header set
    */
-  setAuthHeader() {
+  setAuthHeader(): void {
     // to add any custom header modification
   }
 

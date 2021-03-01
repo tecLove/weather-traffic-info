@@ -18,13 +18,13 @@ describe('Base Service', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [BaseService, {
-        provide: UtilService, useValue: {environment: () => 'development'}
+        provide: UtilService, useValue: { environment: () => 'development' }
       }]
     });
-    service = TestBed.get(BaseService);
+    service = TestBed.inject(BaseService);
     // Inject the http service and test controller for each test
-    httpTestingController = TestBed.get(HttpTestingController);
-    utils = TestBed.get(UtilService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+    utils = TestBed.inject(UtilService);
     env = utils.environment;
   });
   afterEach(() => {
@@ -40,7 +40,8 @@ describe('Base Service', () => {
    * * @param body
    * * @param error
    */
-  function mockHttpBackend(testData: any, restEndPoint: RestEndPoint, requestType: RequestType, body? : any, error?: HttpErrorResponse) {
+  function mockHttpBackend(testData: any, restEndPoint: RestEndPoint, requestType: RequestType, body?: any, error?: HttpErrorResponse)
+    : void {
     const requestBody = body ? body : null;
     const mockTestData = service.isMock ? testData[0].metadata : testData;
     service.sendRequest(restEndPoint, requestType, requestBody)
@@ -62,7 +63,7 @@ describe('Base Service', () => {
    * * @param body
    * * @param error
    */
-  function mockHttpBackendWithError(restEndPoint: RestEndPoint, requestType: RequestType, body?: any, error?: any) {
+  function mockHttpBackendWithError(restEndPoint: RestEndPoint, requestType: RequestType, body?: any, error?: any): void {
     const requestBody = body ? body : null;
     const emsg = 'deliberate 404 error';
     service.sendRequest(restEndPoint, requestType, requestBody)
@@ -85,7 +86,7 @@ describe('Base Service', () => {
    * * @param body
    * * @param error
    */
-  function mockHttpFrontEndWithError(restEndPoint: RestEndPoint, requestType: RequestType, body?: any, error?: any) {
+  function mockHttpFrontEndWithError(restEndPoint: RestEndPoint, requestType: RequestType, body?: any, error?: any): void {
     const requestBody = body ? body : null;
     const emsg = 'simulated network error';
     service.sendRequest(restEndPoint, requestType, requestBody)
@@ -105,33 +106,34 @@ describe('Base Service', () => {
   });
 
   it('should call sendRequest method with PUT', () => {
-    const testData: { url: string } = {url: 'Test Data'};
+    const testData: { url: string } = { url: 'Test Data' };
     service.isMock = false;
-    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Put, {email: 'email', username: 'username'});
+    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Put, { email: 'email', username: 'username' });
   });
 
   it('should call sendRequest method with POST', () => {
-    const testData: { url: string } = {url: 'Test Data'};
-    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, {email: 'email', password: 'password'});
+    const testData: { url: string } = { url: 'Test Data' };
+    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, { email: 'email', password: 'password' });
   });
   it('should call sendRequest method with GET', () => {
-    const testData: { url: string } = {url: 'Test Data'};
+    const testData: { url: string } = { url: 'Test Data' };
     mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, {});
   });
   it('should fail with backend error-404 ', () => {
-    mockHttpBackendWithError(RestEndPoint.GetWeatherForecast, RequestType.Get, {email: 'email'}, {status: 404, statusText: 'Not Found'});
+    mockHttpBackendWithError(RestEndPoint.GetWeatherForecast, RequestType.Get,
+      { email: 'email' }, { status: 404, statusText: 'Not Found' });
   });
   it('should fail with front end network error ', () => {
     mockHttpFrontEndWithError(RestEndPoint.GetTrafficImg, RequestType.Get, {});
   });
   it('it should test handleResponse method for mock services', () => {
     service.isMock = true;
-    const inputData = [{metadata: ''}];
+    const inputData = [{ metadata: '' }];
     const result = service.handleResponse(inputData);
     expect(result).toEqual((''));
   });
   it('should call sendRequest method with GET', () => {
-    const testData = [{metadata: 'Test Data'}];
+    const testData = [{ metadata: 'Test Data' }];
     service.isMock = true;
     env.mock = true;
     mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, {});
@@ -150,13 +152,13 @@ describe('Base Service', () => {
     spyOn(console, 'log').and.callThrough();
     let obser = service.customStrategyCallBack();
     expect(obser).toBeTruthy();
-    obser = service.customStrategyCallBack({maxRetryAttempt: 3, includedStatusCodes: [504]});
-    expect(obser({status: 0}, 0)).toBeTruthy();
-    obser({status: 504}, 0);
+    obser = service.customStrategyCallBack({ maxRetryAttempt: 3, includedStatusCodes: [504] });
+    expect(obser({ status: 0 }, 0)).toBeTruthy();
+    obser({ status: 504 }, 0);
     expect(console.log).toHaveBeenCalled();
   });
   it('should test handle error method', () => {
-    const httpErrorResponse = new HttpErrorResponse({error: {error: {message: 'something went wrong'}}});
+    const httpErrorResponse = new HttpErrorResponse({ error: { error: { message: 'something went wrong' } } });
     expect(service.handleError(httpErrorResponse)).toBeTruthy();
   });
 });

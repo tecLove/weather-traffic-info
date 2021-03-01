@@ -14,7 +14,7 @@ describe('UtilService', () => {
       declarations: [],
       providers: [UtilService]
     });
-    service = TestBed.get(UtilService);
+    service = TestBed.inject(UtilService);
   });
 
   it('should be created', () => {

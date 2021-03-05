@@ -4,6 +4,6 @@
 export default interface Environment {
   production: boolean;
   appCntxt: string;
-  apiBaseUrl: string;
+  accessKey: string;
   mock: boolean;
 }

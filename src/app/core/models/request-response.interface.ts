@@ -35,6 +35,7 @@ interface Camera {
     image_id: number;
     image: string;
     image_metadata: ImageMetadata;
+    location: LabelLocation;
 }
 
 interface Item {

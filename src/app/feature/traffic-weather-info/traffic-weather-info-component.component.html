@@ -18,10 +18,11 @@
          </div>
          <div class="location-weather-box">
            <mat-form-field appearance="fill" class="location">
-             <mat-label>Location</mat-label>
-             <mat-select name="Selection" (selectionChange)="handleLocationChange($event)">
+             <mat-label *ngIf="!locationDropDown">Location</mat-label>
+             <mat-label *ngIf="locationDropDown">Loading locations...</mat-label>
+             <mat-select name="Selection" (selectionChange)="handleLocationChange($event)" [disabled]="locationDropDown">
                <ng-container *ngIf="locationData">
-                 <ng-container *ngFor="let location of locationData['area_metadata']">
+                 <ng-container *ngFor="let location of locationData">
                    <mat-option [value]="location.label_location">
                      {{location.name}}
                    </mat-option>

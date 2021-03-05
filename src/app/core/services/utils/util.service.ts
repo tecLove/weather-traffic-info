@@ -16,9 +16,11 @@ import Environment from '../../models/environment.interface';
  */
 export class UtilService {
   private isServerError: Subject<boolean>;
+  private appLoader: Subject<boolean>;
 
   constructor() {
     this.isServerError = new Subject();
+    this.appLoader = new Subject();
   }
 
   get serverError(): Subject<boolean> {
@@ -52,8 +54,8 @@ export class UtilService {
     return window.document.cookie;
   }
   /**
-   *  @description To set cookie value
-   * *@param cookieValue
+   * *@description To set cookie value
+   * *@param cookieValue of type string
    */
   set cookie(cookieValue) {
     window.document.cookie = cookieValue;
@@ -82,7 +84,7 @@ export class UtilService {
 
   /**
    * @description To get current date with timestamp
-   * @param dateParam 
+   * @param dateParam of type string
    */
   curreTimeStamp(dateParam?: string): string {
     const dateSelection = dateParam ? new Date(dateParam) : new Date();
@@ -96,11 +98,18 @@ export class UtilService {
   }
   /**
    * @description To convert a single digit to double digit
-   * @param num
+   * @param num of type number
    */
   convertToTwoDigit(num: number): string | number {
     return num < 10 ? `0${num}` : num;
   }
 
+  set toggleLoader(data: boolean) {
+    this.appLoader.next(data);
+  }
+
+  get loader(): Subject<boolean> {
+    return this.appLoader;
+  }
 }
 

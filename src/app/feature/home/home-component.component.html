@@ -1,3 +1,4 @@
 <div *ngIf="isServerError" class="server-error">There was some error while fetching data</div>
 <div class="home"><h2>Welcome</h2></div>
+<app-loader [globalInst]="true"></app-loader>
 <app-traffic-weather-info-component></app-traffic-weather-info-component>

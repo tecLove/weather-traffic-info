@@ -4,7 +4,8 @@
 export enum RestEndPoint {
   GetTrafficImg = '/transport/traffic-images',
   GetWeatherForecast = '/environment/2-hour-weather-forecast',
-  MockService = '/mockdata/forms'
+  MockService = '/mockdata/forms',
+  ReverseGeoCoding = '/reverse'
 }
 
 

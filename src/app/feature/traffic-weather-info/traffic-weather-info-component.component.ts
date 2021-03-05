@@ -1,5 +1,7 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { RequestType, RestEndPoint } from 'src/app/core/models/endpoint.enum';
 import { GetTrafficImgRequest, GetTrafficImgResponse, GetWeatherForecastRequest, GetWeatherForecastResponse } from 'src/app/core/models/request-response.interface';
@@ -15,8 +17,10 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
   timeSelected: string | undefined;
   dateSelected: any;
   trafficData: any;
+  trafficDataOrig: any;
   today: any;
-  locationData: any;
+  locationDropDown: boolean;
+  locationData: Array<any>;
   dateChangeEmitter: BehaviorSubject<any>;
   timeChangeEmitter: BehaviorSubject<any>;
   constructor(private baseService: BaseService, private utilService: UtilService) {
@@ -25,6 +29,8 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
     this.today = new Date();
     this.dateChangeEmitter = new BehaviorSubject(undefined);
     this.timeChangeEmitter = new BehaviorSubject(undefined);
+    this.locationData = [];
+    this.locationDropDown = true;
   }
 
   ngOnInit(): void {
@@ -37,34 +43,39 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
       this.getTrafficImg(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${this.timeSelected}`);
     });
     this.getTrafficImg();
-    this.getWeatherForecast('', '');
+    // this.getWeatherForecast('', '');
   }
   /**
    * To get the traffic images as per the date and time
    */
   getTrafficImg(dateTime?: string): void {
+    this.utilService.toggleLoader = true;
     const param = !dateTime ? `?date_time=${this.utilService.curreTimeStamp()}` : `?date_time=${this.utilService.curreTimeStamp(dateTime)}`;
     console.log('Request body is,');
     this.baseService.sendRequest<GetTrafficImgRequest, GetTrafficImgResponse>(RestEndPoint.GetTrafficImg, RequestType.Get, param)
       .subscribe((res) => {
+        this.utilService.toggleLoader = false;
+        this.trafficDataOrig = res;
         this.trafficData = res;
+        this.prepareLocationData(res);
         console.log(res);
       }, (error: any) => {
         console.log('There was an error while loading the traffic details from thee server', error);
-        this.utilService.clearServerError();
+        this.utilService.createServerError();
       });
   }
   /**
    * @description To get weather forecast
-   * @param location 
-   * @param dateTime 
+   * @param location of type string
+   * @param dateTime of type string
    */
   getWeatherForecast(location: string, dateTime: string): void {
     const param = `?area_metadata=${location}&date_time=${dateTime}`;
     this.baseService.sendRequest<GetWeatherForecastRequest, GetWeatherForecastResponse>(RestEndPoint.GetWeatherForecast, RequestType.Get)
+      .pipe(distinctUntilChanged())
       .subscribe((res) => {
         console.log('The location response is', res);
-        this.locationData = res;
+        // this.locationData = res;
       }, (error: any) => {
         console.log('There was an error while loading the weather forecast details from the server', error);
         this.utilService.clearServerError();
@@ -72,7 +83,6 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
   }
   /**
    * @description Handler for user action to time change
-   * @param event 
    */
   handleTimeChange(): void {
     if (this.dateSelected && this.timeSelected) {
@@ -84,7 +94,6 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
   }
   /**
    * @description Handler for user action to date change
-   * @param event
    */
   handleDateChange(): void {
     if (this.dateSelected && this.timeSelected) {
@@ -93,7 +102,7 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
   }
   /**
    * @description To compare two timings
-   * @param time1 
+   * @param time1 of type string
    */
   compareTime(time: string): boolean {
     if (+time.split(':')[0] > (new Date().getHours())) {
@@ -107,13 +116,33 @@ export class TrafficWeatherInfoComponentComponent implements OnInit {
    * Handler for user action to location change
    */
   handleLocationChange(event: any): boolean {
-    this.trafficData.items[0].cameras.filter((data: any) => {
-      if (data.location.longitude === event.value.longitude && data.location.latitude === event.value.latitude) {
-        console.log('There was a match');
-        return true;
-      }
-      return false;
-    });
+    this.trafficData = {
+      items: [{
+        cameras: this.trafficDataOrig.items[0].cameras.filter((data: any) =>
+          data.location.longitude === event.value.longitude && data.location.latitude === event.value.latitude
+        )
+      }]
+    };
     return false;
+  }
+
+  prepareLocationData(data: any): void {
+    const subscription = [];
+    for (const loc of data.items[0].cameras) {
+      this.locationData.push({ label_location: { latitude: loc.location.latitude, longitude: loc.location.longitude }, name: '' });
+      subscription.push(this.getReverseGeoCoding(loc.location));
+    }
+    combineLatest(subscription).pipe().subscribe((res: Array<any>) => {
+      for (let i = 0; i < res.length; i++) {
+        this.locationData[i].name = res[i].data[0].name;
+      }
+      this.locationData = this.locationData.filter((location) => location.name !== undefined);
+      this.locationDropDown = false;
+    });
+  }
+
+  getReverseGeoCoding(loc: { latitude: number, longitude: number }): Observable<HttpResponse<any>> {
+    const param = `?access_key=${this.utilService.environment.accessKey}&query=${loc.latitude},${loc.longitude}&output=json`;
+    return this.baseService.sendRequest(RestEndPoint.ReverseGeoCoding, RequestType.Get, param);
   }
 }

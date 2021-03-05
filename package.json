@@ -4,10 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start-dev": "ng serve",
+    "start-dev": "ng serve --proxy-config proxy.config.json",
     "build": "ng build",
     "test": "ng test",
     "ts-lint": "ng lint",
+    "ts-lint-autofix": "npx tslint-auto-fix",
     "e2e": "ng e2e",
     "sass-lint": "sass-lint -c .sass-lint.yml **/*.scss -v -q",
     "sass-lint:fix": "sass-lint-auto-fix"
@@ -27,6 +28,7 @@
     "ngx-material-timepicker": "^5.5.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "tslint-auto-fix": "^1.0.0",
     "zone.js": "~0.11.3"
   },
   "devDependencies": {

@@ -1,16 +1,18 @@
+$rootMargin: 20px;
+
 .home {
-    display: flex;
-    justify-content: center;
-    margin: 20px;
+  display: flex;
+  margin: $rootMargin;
+  justify-content: center;
 }
 
 .server-error {
-    color: #f08080;
-    position: absolute;
-    text-align: center;
-    width: 100%;
+  color: #F08080;
+  position: absolute;
+  text-align: center;
+  width: 100%;
 
-    @media screen and (max-width: 850px) {
-        font-size: 13px;
-    }
+  @media screen and (max-width: 850px) {
+    font-size: 13px;
+  }
 }

@@ -11,7 +11,7 @@ import { BaseService } from './base.service';
 describe('Base Service', () => {
   let service: BaseService;
   let httpTestingController: HttpTestingController;
-  let env: Environment;
+  let environmentObj: Environment;
   let utils: UtilService;
 
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('Base Service', () => {
     // Inject the http service and test controller for each test
     httpTestingController = TestBed.inject(HttpTestingController);
     utils = TestBed.inject(UtilService);
-    env = utils.environment;
+    environmentObj = utils.environment;
   });
   afterEach(() => {
     // After every test, assert that there are no more pending requests.
@@ -47,8 +47,8 @@ describe('Base Service', () => {
     service.sendRequest(restEndPoint, requestType, requestBody)
       .subscribe((data) =>
         expect(data).toEqual(mockTestData));
-    const reqParam = !service.isMock ? env.appCntxt + restEndPoint
-      : env.appCntxt + '/mockdata/forms' + '/?name=' + restEndPoint.split('/').reverse()[0];
+    const reqParam = !service.isMock ? environmentObj.appCntxt + restEndPoint
+      : environmentObj.appCntxt + '/mockdata/forms' + '/?name=' + restEndPoint.split('/').reverse()[0];
     const req = httpTestingController.expectOne(reqParam);
     expect(req.request.method).toEqual(requestType);
     req.flush(testData);
@@ -72,7 +72,7 @@ describe('Base Service', () => {
         expect(BackendError.status).toEqual(404, 'status');
         expect(BackendError.error).toEqual(emsg, 'message');
       });
-    const req = httpTestingController.expectOne(env.appCntxt + restEndPoint);
+    const req = httpTestingController.expectOne(environmentObj.appCntxt + restEndPoint);
     expect(req.request.method).toEqual(requestType);
     req.flush(emsg, error);
     // Finally, assert that there are no outstanding requests.
@@ -94,7 +94,7 @@ describe('Base Service', () => {
         const NetworkError = ERROR.error;
         expect(NetworkError).toEqual(emsg, 'message');
       });
-    const req = httpTestingController.expectOne(env.appCntxt + restEndPoint);
+    const req = httpTestingController.expectOne(environmentObj.appCntxt + restEndPoint);
     const mockError = new ErrorEvent('Network error', {
       message: emsg,
     });
@@ -108,23 +108,19 @@ describe('Base Service', () => {
   it('should call sendRequest method with PUT', () => {
     const testData: { url: string } = { url: 'Test Data' };
     service.isMock = false;
-    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Put, { email: 'email', username: 'username' });
+    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Put);
   });
 
   it('should call sendRequest method with POST', () => {
     const testData: { url: string } = { url: 'Test Data' };
-    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, { email: 'email', password: 'password' });
-  });
-  it('should call sendRequest method with GET', () => {
-    const testData: { url: string } = { url: 'Test Data' };
-    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, {});
+    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get);
   });
   it('should fail with backend error-404 ', () => {
     mockHttpBackendWithError(RestEndPoint.GetWeatherForecast, RequestType.Get,
-      { email: 'email' }, { status: 404, statusText: 'Not Found' });
+      '', { status: 404, statusText: 'Not Found' });
   });
   it('should fail with front end network error ', () => {
-    mockHttpFrontEndWithError(RestEndPoint.GetTrafficImg, RequestType.Get, {});
+    mockHttpFrontEndWithError(RestEndPoint.GetTrafficImg, RequestType.Get, '');
   });
   it('it should test handleResponse method for mock services', () => {
     service.isMock = true;
@@ -135,8 +131,8 @@ describe('Base Service', () => {
   it('should call sendRequest method with GET', () => {
     const testData = [{ metadata: 'Test Data' }];
     service.isMock = true;
-    env.mock = true;
-    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, {});
+    environmentObj.mock = true;
+    mockHttpBackend(testData, RestEndPoint.GetTrafficImg, RequestType.Get, '');
   });
   it('should call customRetryStrategy method', () => {
     const obser = service.customRetryStrategy();

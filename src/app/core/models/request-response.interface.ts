@@ -52,3 +52,26 @@ interface LabelLocation {
     longitude: number;
     latitude: number;
 }
+
+export interface RevGeoCodResponse {
+    data: Array<{
+        latitude: string,
+        longitude: string,
+        type: string,
+        distance: string,
+        name: string,
+        number: string,
+        postal_code: string,
+        street: string,
+        confidence: string,
+        region: string,
+        region_code: string,
+        county: string,
+        locality: string,
+        administrative_area: string,
+        neighbourhood: string,
+        country: string,
+        country_code: string,
+        continent: string, label: string
+    }>;
+}

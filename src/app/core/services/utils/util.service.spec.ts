@@ -26,12 +26,22 @@ describe('UtilService', () => {
     expect(service.localStorage).toEqual(window.localStorage);
     expect(service.cookie).toEqual(document.cookie);
   });
-  it('should call handleNumLength method to define the length of form input control', () => {
-    expect(service.handleNumLength(new FormControl('123456'), 6)).toEqual(false);
-    expect(service.handleNumLength(new FormControl('12345'), 6)).toEqual(true);
-    expect(service.handleNumLength(new FormControl(), 6)).toEqual(true);
+  it('should convertToTwoDigit method', () => {
+    expect(service.convertToTwoDigit(9)).toEqual(`09`);
+    expect(service.convertToTwoDigit(10)).toEqual(10);
   });
-  it('should call toTitleCase method', () => {
-    expect(service.toTitleCase('national environment agency')).toEqual('National Environment Agency');
+  it('should verify getter and setter for loader', () => {
+    service.loader.subscribe((res) => {
+      expect(res).toEqual(true);
+    });
+    expect(service.loader).toEqual(service.loader);
+    service.toggleLoader = true;
+  });
+  it('should call curreTimeStamp method', () => {
+    let timeStamp = service.curreTimeStamp();
+    expect(timeStamp.substr(0, 4)).toEqual('2021');
+    timeStamp = service.curreTimeStamp('2021-04-06');
+    expect(timeStamp.substr(5, 2)).toEqual('04');
   });
 });
+

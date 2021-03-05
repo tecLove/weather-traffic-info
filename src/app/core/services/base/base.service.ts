@@ -36,8 +36,7 @@ export class BaseService {
   sendRequest<Rq, Rs>(endpoint: RestEndPoint | string, requestType: RequestType, param?: string, body?: Rq): Observable<HttpResponse<Rs>> {
     this.endPoint = endpoint;
     this.setAuthHeader();
-    const baseUrl = '';
-    let url = baseUrl + (this.isMock ?
+    let url = (this.isMock ?
       (this.util.environment.appCntxt + RestEndPoint.MockService + '/?name=' + endpoint.split('/').reverse()[0])
       : this.util.environment.appCntxt + endpoint);
     url = param ? `${url}${param}` : url;

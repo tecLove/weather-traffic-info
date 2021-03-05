@@ -49,7 +49,7 @@ rules:
         - margin
       ignore-custom-properties: true
   variable-for-property:
-    - 2
+    - 1
     -
       properties:
         - margin

@@ -6,6 +6,11 @@ $rootMargin: 20px;
   justify-content: center;
 }
 
+@media screen and (max-width: 586px) {
+  .home {
+    margin: 0;
+  }
+}
 .server-error {
   color: #F08080;
   position: absolute;

@@ -16,5 +16,14 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/v1/environment": {
+    "target": {
+      "host": "api.data.gov.sg",
+      "protocol": "https:"
+    },
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }

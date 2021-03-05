@@ -1,10 +1,10 @@
-$bgColor: #1A322F;
+$bgColor: lightgrey;
 
 .lds-roller-bg-cover {
   background-color: $bgColor;
   width: 100%;
   height: 100%;
-  opacity: .5;
+  opacity: .2;
   position: absolute;
   z-index: 200;
 }
@@ -12,8 +12,8 @@ $bgColor: #1A322F;
 .lds-roller {
   display: inline-block;
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: calc(50% - 42px);
+  top: 44%;
   width: 80px;
   height: 80px;
 }

@@ -3,9 +3,16 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.2.
 
 ## Prerequisite
-Your machine should have node 12 or higher version.
+Your machine should have nodeJS 12 or higher version.
 Download the code from the repo and then run `npm install` inside the project directory.
 Once the installation of the packages are done, run `npm install -g @angular/cli`.
+
+A proxy is being used in local to fetch the data from public api to avoid CORS issues. When deployed to server, proxy might have to be configured at web server level accordingly.
+
+Once the traffic images have been fetched, request is made to decode latitude and longitude for each entry, received from traffic img api. Request takes time to return the decoded locations. If there is an api available which can return all the decoded locations in one call then it would be quiet efficient. 
+When user changes date or time then previously fetched decoded locations are used.
+
+Most of the times the weather forecast returned by `https://api.data.gov.sg/v1/environment/2-hour-weather-forecast` does not match any of the area location returned by reverse geolocation. In that case no weather forecast is displayed.
 
 ## Development server
 

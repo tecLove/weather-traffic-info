@@ -4,7 +4,7 @@
        <div class="input-box">
          <div class="date-time-box">
            <mat-form-field appearance="fill" class="date">
-             <mat-label>Choose a date</mat-label>
+             <mat-label id="date">Choose a date</mat-label>
              <input matInput [matDatepicker]="picker" [(ngModel)]="dateSelected" [max]="today">
              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
              <mat-datepicker #picker startView="year" (closed)="handleDateChange()">
@@ -12,15 +12,17 @@
            </mat-form-field>
            <mat-form-field appearance="fill" class="time">
              <mat-label>Choose a time</mat-label>
-             <input matInput [ngxTimepicker]="pickerTime" placeholder="Choose a time" [format]=24 [(ngModel)]="timeSelected">
+             <input matInput [ngxTimepicker]="pickerTime" placeholder="Choose a time" [format]=24
+               [(ngModel)]="timeSelected">
              <ngx-material-timepicker #pickerTime (closed)="handleTimeChange()"></ngx-material-timepicker>
            </mat-form-field>
          </div>
          <div class="location-weather-box">
            <mat-form-field appearance="fill" class="location">
-             <mat-label *ngIf="!locationDropDown">Location</mat-label>
-             <mat-label *ngIf="locationDropDown">Loading locations...</mat-label>
-             <mat-select name="Selection" (selectionChange)="handleLocationChange($event)" [disabled]="locationDropDown">
+             <mat-label *ngIf="isLocationLoaded">Location</mat-label>
+             <mat-label *ngIf="!isLocationLoaded">Loading locations...</mat-label>
+             <mat-select name="Selection" (selectionChange)="handleLocationChange($event)"
+               [disabled]="!isLocationLoaded" [(value)]="selectedLocation.location">
                <ng-container *ngIf="locationData">
                  <ng-container *ngFor="let location of locationData">
                    <mat-option [value]="location.label_location">
@@ -32,7 +34,7 @@
            </mat-form-field>
            <mat-form-field class="weather">
              <mat-label>Weather forecast</mat-label>
-             <textarea matInput placeholder="" disabled></textarea>
+             <textarea matInput disabled class="forecast">{{WeatherForSelectedLoc}}</textarea>
            </mat-form-field>
          </div>
        </div>

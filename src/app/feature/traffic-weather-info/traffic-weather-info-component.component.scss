@@ -37,6 +37,10 @@ $imgMargin: 3px;
           .weather {
             float: right;
             width: calc(50% - 6px);
+
+            .forecast {
+              color: #000;
+            }
           }
         }
       }
